@@ -11,7 +11,7 @@ type AddressData struct {
 	IpAddr string `json:"ip"`
 }
 
-var exampleJSON = []byte(`[{"dom":"http://test.com","ip":"1.1.1.1"}, {"dom":"http://sub.domain.com", "ip":"1.2.3.4"}]`)
+var exampleJSON = []byte(`[{"dom":"http://test.com","ip":"1.1.1.1"}, {"dom":"http://sub.domain.com", "ip":"1.2.3.4"}, {"dom":"http://sub.domain.com", "ip":"5.6.7.8"}]`)
 
 func main() {
 
@@ -22,7 +22,13 @@ func main() {
 		log.Fatal(err) // only call to log.Fatal, so we know where it is
 	}
 
+	addresses := make(map[string][]string)
+
 	for _, d := range data {
-		fmt.Printf("Domain name: %q, IP address: %q\n", d.FQDN, d.IpAddr)
+		addresses[d.FQDN] = append(addresses[d.FQDN], d.IpAddr)
+	}
+
+	for fqdn, addrs := range addresses {
+		fmt.Printf("%q: %v\n", fqdn, addrs)
 	}
 }
